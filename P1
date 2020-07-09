@@ -1,0 +1,18 @@
+# for i in ['F1大额','F2大额']:
+
+data = data_4
+mp1_d = {'队列':['F1大额','F2大额','Y3','Y3+','Y3+留案'],
+       '阶段':['Y1','Y1','Y3','Y3','Y3']}
+mp1 = pd.DataFrame(mp1_d)
+
+# data = data[data['经办_tag']=='N']
+date = '2020-04-15'
+df = pd.merge(data[['日期','队列','处理人','按阶段系数_金额']],mp1)
+df = df[df['日期']<=date]
+dfg = df.groupby(['阶段','处理人']).sum()
+dfg
+# dfg2 = dfg.groupby(['阶段']).mean()
+# dfg2
+dfg['rank']=dfg.groupby('阶段').rank(ascending = False).astype(int)
+dfg = dfg.sort_values(by=['阶段','rank'],ascending = False)
+dfg[dfg['rank']<= 5].sort_values(by = ['阶段','rank'])
